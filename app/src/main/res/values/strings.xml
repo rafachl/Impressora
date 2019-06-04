@@ -3,7 +3,8 @@
     <string name="print_display">Display Mode</string>
     <string name="print_text">Print Text</string>
     <string name="print_english">Print English</string>
-    <string name="print_char">Print Char</string><string name="print_picture">Print Picture</string>
+    <string name="print_char">Print Char</string>
+    <string name="print_picture">Print Picture</string>
     <string name="print_qrcode">Print QRcode</string>
     <string name="print_barcode">Print Barcode</string>
     <string name="print_self_check">Print Self Check</string>
@@ -37,4 +38,5 @@
     <string name="unknown_error">unknown status</string>
     <string name="switch_mode">Switch Mode</string>
     <string name="exit">Exit</string>
+    <string name="title_activity_login">LoginActivity</string>
 </resources>

@@ -7,25 +7,32 @@
     android:orientation="vertical"
     tools:context="com.iposprinter.printertestdemo.IPosPrinterTestDemo">
 
-    <ScrollView
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/editText2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textEmailAddress" />
 
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword" />
 
-            <Button
+    <Button
                 android:id="@+id/b_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="GERAR COMPROVANTE"
-                android:onClick="printText"/>
+                android:onClick="logar"/>
 
-
-        </LinearLayout>
-    </ScrollView>
+</LinearLayout>
 </LinearLayout>
