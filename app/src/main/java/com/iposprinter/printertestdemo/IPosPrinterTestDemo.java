@@ -22,6 +22,7 @@ import java.io.OutputStreamWriter;
 import java.util.Random;
 
 import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.WindowManager;
 
 import com.google.android.gms.appindexing.Action;
@@ -60,7 +61,7 @@ import static com.iposprinter.printertestdemo.Utils.PrintContentsExamples.Elemo;
 import static com.iposprinter.printertestdemo.Utils.PrintContentsExamples.Baidu;
 import static com.iposprinter.printertestdemo.MemInfo.bitmapRecycle;
 
-public class IPosPrinterTestDemo extends Activity {
+public class IPosPrinterTestDemo extends AppCompatActivity {
 
     private static final String TAG = "IPosPrinterTestDemo";
     /* Demo 版本号*/
@@ -108,7 +109,6 @@ public class IPosPrinterTestDemo extends Activity {
     private int printDriverTestCount = 0;
 
 
-    private TextView info;
     private IPosPrinterService mIPosPrinterService;
     private IPosPrinterCallback callback = null;
 
@@ -332,7 +332,21 @@ public class IPosPrinterTestDemo extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ipos_printer_test_demo);
-        //设置屏幕一直亮着，不进入休眠状态
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbara);
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationIcon(R.drawable.ic);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                // Your code
+                finish();
+            }
+        });
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         handler = new HandlerUtils.MyHandler(iHandlerIntent);
         innitView();
@@ -430,14 +444,9 @@ public class IPosPrinterTestDemo extends Activity {
 
 
         setButtonEnable(false);
-        info = (TextView) findViewById(R.id.info);
-        info.setText(VERSION);
     }
 
 
-    /**
-     * 获取打印机状态
-     */
     public int getPrinterStatus() {
 
         Log.i(TAG, "***** printerStatus" + printerStatus);
