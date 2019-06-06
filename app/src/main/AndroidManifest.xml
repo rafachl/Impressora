@@ -25,11 +25,17 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
         </activity>
         <activity android:name=".IPosPrinterTestDemo"
             android:label="Alocar Veiculo"
             android:theme="@style/AppTheme.NoActionBar"
-            ></activity>
+            >
+
+
+
+        </activity>
 
         <service android:name="com.iposprinter.iposprinterservice.IPosPrintService" />
         <!--

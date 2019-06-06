@@ -54,7 +54,7 @@ this.sendPost();
                                     conn.setRequestProperty("Content-Type", "application/json");
                                     conn.setRequestProperty("Accept","application/json");
 
-
+String status=String.valueOf(conn.getResponseCode());
 
                                     Log.e("STATUS", String.valueOf(conn.getResponseCode()));
                                     Log.e("MSG" , conn.getResponseMessage());
@@ -69,7 +69,7 @@ this.sendPost();
 
                                     intent.putExtra("locacao",json_response);
                                     startActivity(intent);
-
+finish();
                                     conn.disconnect();
                                 } catch (Exception e) {
                                     e.printStackTrace();

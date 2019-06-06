@@ -13,12 +13,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Random;
 
 import android.support.v7.widget.LinearLayoutCompat;
@@ -29,7 +34,9 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 import com.iposprinter.iposprinterservice.*;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -47,6 +54,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +62,9 @@ import com.iposprinter.printertestdemo.Utils.ButtonDelayUtils;
 import com.iposprinter.printertestdemo.Utils.BytesUtil;
 import com.iposprinter.printertestdemo.Utils.DadosTicket;
 import com.iposprinter.printertestdemo.Utils.HandlerUtils;
+import com.iposprinter.printertestdemo.dto.Login;
+import com.iposprinter.printertestdemo.dto.SalvarAlocacaoDTO;
+
 import static com.iposprinter.printertestdemo.Utils.PrintContentsExamples.customCHR;
 import static com.iposprinter.printertestdemo.Utils.PrintContentsExamples.customCHZ1;
 import static com.iposprinter.printertestdemo.Utils.PrintContentsExamples.Text;
@@ -119,6 +130,158 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    RadioGroup radioTipo;
+    RadioGroup radioTempo;
+    RadioGroup radioMoeda;
+    EditText edtVaga;
+    EditText edtMotorista;
+    EditText edtPlaca;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_ipos_printer_test_demo);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbara);
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationIcon(R.drawable.ic);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                // Your code
+                finish();
+            }
+        });
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        handler = new HandlerUtils.MyHandler(iHandlerIntent);
+        innitView();
+        callback = new IPosPrinterCallback.Stub() {
+
+            @Override
+            public void onRunResult(final boolean isSuccess) throws RemoteException {
+                Log.i(TAG, "result:" + isSuccess + "\n");
+            }
+
+            @Override
+            public void onReturnString(final String value) throws RemoteException {
+                Log.i(TAG, "result:" + value + "\n");
+            }
+        };
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(IPosPrinterTestDemo.this, new String[]{Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }
+        }
+
+        writePrintDataToCacheFile("*****************", null);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+
+        radioTipo = (RadioGroup) findViewById(R.id.tipoLocacao);
+        radioMoeda = (RadioGroup) findViewById(R.id.radioMoeda);
+        radioTempo = (RadioGroup) findViewById(R.id.radioTempo);
+        edtVaga = (EditText) findViewById(R.id.edtVaga);
+        edtMotorista = (EditText) findViewById(R.id.edtMotorista);
+        edtPlaca = (EditText) findViewById(R.id.edtPlaca);
+
+    }
+
+    public void coletarDados(View v) {
+        int itenRadioTipo = radioTipo.getCheckedRadioButtonId();
+        int itenRadioMoeda = radioMoeda.getCheckedRadioButtonId();
+        int itenRadioTempo = radioTempo.getCheckedRadioButtonId();
+
+        String tipo = "moto";
+        String tempo = "";
+        if (itenRadioTipo == findViewById(R.id.radiocarro).getId()) {
+            tipo = "carro";
+        }
+
+        if (itenRadioTempo == findViewById(R.id.radio15).getId()) {
+            tempo = "15";
+
+        } else if (itenRadioTempo == findViewById(R.id.radio30).getId()) {
+            tempo = "30";
+        } else if (itenRadioTempo == findViewById(R.id.radio1).getId()) {
+            tempo = "60";
+        } else if (itenRadioTempo == findViewById(R.id.radio2).getId()) {
+            tempo = "120";
+        }
+        String moeda = "";
+        if (itenRadioMoeda == findViewById(R.id.radiogua).getId()) {
+            moeda = "GS";
+        } else if (itenRadioMoeda == findViewById(R.id.radiodo).getId()) {
+            moeda = "U$";
+        } else if (itenRadioMoeda == findViewById(R.id.radioReal).getId()) {
+            moeda = "BRL";
+        } else if (itenRadioMoeda == findViewById(R.id.radioPeso).getId()) {
+            moeda = "Peso";
+        }
+
+
+        SalvarAlocacaoDTO alocacaoDTO = new SalvarAlocacaoDTO();
+        alocacaoDTO.setTipo(tipo);
+        alocacaoDTO.setTempo(tempo);
+        alocacaoDTO.setMoeda(moeda);
+        alocacaoDTO.setPlaca(edtPlaca.getText().toString());
+        alocacaoDTO.setVaga(edtVaga.getText().toString());
+        alocacaoDTO.setMotorista(edtMotorista.getText().toString());
+        alocacaoDTO.setFiscal_id("1");
+        alocacaoDTO.setValorPago("2333");
+
+        this.salvarLocacao(alocacaoDTO);
+
+    }
+
+    public void salvarLocacao(final SalvarAlocacaoDTO salvarAlocacaoDTO) {
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL("https://app.actsistemas.com.br/alocacao/");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+                    conn.setRequestProperty("Accept", "application/json");
+                    conn.setDoOutput(true);
+                    conn.setDoInput(true);
+
+
+                    Gson gson = new Gson();
+
+                    DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+                    //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
+                    os.writeBytes(gson.toJson(salvarAlocacaoDTO));
+
+                    os.flush();
+                    os.close();
+                    Log.e("Json", gson.toJson(salvarAlocacaoDTO));
+
+                    Log.e("STATUS", String.valueOf(conn.getResponseCode()));
+                    Log.e("MSG", conn.getResponseMessage());
+                    conn.disconnect();
+
+
+                    sendPost();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
+
+    }
+
 
     private void setButtonEnable(boolean flag) {
 
@@ -206,7 +369,53 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
         }
     };
 
+    public void sendPost() {
+        final Intent intent = new Intent(this, MainActivity.class);
 
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL("https://app.actsistemas.com.br/alocacao/1");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Content-Type", "application/json");
+                    conn.setRequestProperty("Accept", "application/json");
+
+
+                    Log.e("STATUS", String.valueOf(conn.getResponseCode()));
+                    Log.e("MSG", conn.getResponseMessage());
+                    String json_response = "";
+                    InputStreamReader in = new InputStreamReader(conn.getInputStream());
+                    BufferedReader br = new BufferedReader(in);
+                    String text = "";
+                    while ((text = br.readLine()) != null) {
+                        json_response += text;
+                    }
+
+
+                    intent.putExtra("locacao", json_response);
+                    startActivity(intent);
+
+                    conn.disconnect();
+                    finish();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // code here to show dialog
+        super.onBackPressed();  // optional depending on your needs
+        this.sendPost();
+
+    }
 
     private ServiceConnection connectService = new ServiceConnection() {
         @Override
@@ -222,9 +431,9 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
     };
 
     public static void writePrintDataToCacheFile(String printStr, byte[] printByteData) {
-        String printDataDirPath = Environment.getExternalStorageDirectory()+File.separator+"PrintDataCache";
-        String printDataFilePath1 = printDataDirPath +File.separator+ "printdata_1.txt";
-        String printDataFilePath2 = printDataDirPath +File.separator+ "printdata_2.txt";
+        String printDataDirPath = Environment.getExternalStorageDirectory() + File.separator + "PrintDataCache";
+        String printDataFilePath1 = printDataDirPath + File.separator + "printdata_1.txt";
+        String printDataFilePath2 = printDataDirPath + File.separator + "printdata_2.txt";
         Log.d(TAG, "printDataDirPath:" + printDataDirPath);
 
         File fileDir = new File(printDataDirPath);
@@ -328,52 +537,6 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ipos_printer_test_demo);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbara);
-        setSupportActionBar(toolbar);
-
-        toolbar.setNavigationIcon(R.drawable.ic);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-
-                // Your code
-                finish();
-            }
-        });
-
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        handler = new HandlerUtils.MyHandler(iHandlerIntent);
-        innitView();
-        callback = new IPosPrinterCallback.Stub() {
-
-            @Override
-            public void onRunResult(final boolean isSuccess) throws RemoteException {
-                Log.i(TAG, "result:" + isSuccess + "\n");
-            }
-
-            @Override
-            public void onReturnString(final String value) throws RemoteException {
-                Log.i(TAG, "result:" + value + "\n");
-            }
-        };
-
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(IPosPrinterTestDemo.this,new String[]{Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            }
-        }
-
-        writePrintDataToCacheFile("*****************", null);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -440,9 +603,6 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
         b_text = (Button) findViewById(R.id.b_text);
 
 
-
-
-
         setButtonEnable(false);
     }
 
@@ -476,18 +636,17 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
     }
 
 
-
     public void printText(View v) {
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
                 Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.test);
-                Bitmap qrcode = BitmapFactory.decodeResource(getResources(), R.mipmap.qrcode );
+                Bitmap qrcode = BitmapFactory.decodeResource(getResources(), R.mipmap.qrcode);
 
 
                 try {
 
-                    DadosTicket dadosTicket=new DadosTicket();
+                    DadosTicket dadosTicket = new DadosTicket();
                     dadosTicket.setDataHora("03/06/2019 22:00");
                     dadosTicket.setMotorista("Gabriel");
                     dadosTicket.setNomeFiscal("Fiscal 20");
@@ -498,12 +657,12 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
                     mIPosPrinterService.printBitmap(1, 8, mBitmap, callback);
                     mIPosPrinterService.printSpecifiedTypeText("COMPROVANTE \n", "ST", 48, callback);
                     mIPosPrinterService.printSpecifiedTypeText("********************************", "ST", 24, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("MOTORISTA: "+dadosTicket.getMotorista(), "ST", 32, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("PLACA: "+dadosTicket.getPlacaVeiculo(), "ST", 32, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("ENTRADA: "+dadosTicket.getDataHora(), "ST", 20, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("SAÍDA: "+dadosTicket.getSaida(), "ST", 20, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("FISCAL:"+ dadosTicket.getNomeFiscal(), "ST", 32, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("TOTAL: "+dadosTicket.getValor(), "ST", 32, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("MOTORISTA: " + dadosTicket.getMotorista(), "ST", 32, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("PLACA: " + dadosTicket.getPlacaVeiculo(), "ST", 32, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("ENTRADA: " + dadosTicket.getDataHora(), "ST", 20, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("SAÍDA: " + dadosTicket.getSaida(), "ST", 20, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("FISCAL:" + dadosTicket.getNomeFiscal(), "ST", 32, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("TOTAL: " + dadosTicket.getValor(), "ST", 32, callback);
                     mIPosPrinterService.printSpecifiedTypeText("MOEDA: GUARANI", "ST", 32, callback);
 
                     mIPosPrinterService.printBitmap(1, 8, qrcode, callback);
@@ -517,8 +676,6 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
             }
         });
     }
-
-
 
 
     /**
@@ -545,8 +702,6 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
             }
         });
     }
-
-
 
 
     /**
@@ -576,7 +731,6 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
     public void multiThreadLoopPrint() {
 
     }
-
 
 
     /**

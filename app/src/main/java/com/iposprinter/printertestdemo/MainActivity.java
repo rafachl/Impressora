@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.iposprinter.printertestdemo.dto.AdapterCursosPersonalizado;
 import com.iposprinter.printertestdemo.dto.Locacoes;
 
 import java.lang.reflect.Type;
@@ -41,8 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
         ListView listaDeCursos = (ListView) findViewById(R.id.lista);
 
-        ArrayAdapter<Locacoes> adapter = new ArrayAdapter<Locacoes>(this,
-                android.R.layout.simple_list_item_1, locacoes);
+
+        AdapterCursosPersonalizado adapter = new AdapterCursosPersonalizado(locacoes, this);
+
 
         listaDeCursos.setAdapter(adapter);
 
@@ -55,8 +57,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(intent);
+                finish();
             }
         });
     }
+
+
 
 }

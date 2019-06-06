@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_ipos_printer_test_demo"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,167 +21,219 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_margin="10dp"
-        >
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:height="35dp"
-        android:inputType="textPersonName"
-        android:hint="Nome motorista" />
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:height="35dp"
-        android:inputType="textPersonName"
-        android:hint="Placa veiculo" />
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-
-    </android.support.design.widget.AppBarLayout>
-
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="35dp" >
-
-        <RadioButton
-            android:id="@+id/radioButton8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Carro" />
-
-        <RadioButton
-            android:id="@+id/radioButton9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Moto" />
-    </RadioGroup>
-
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/radioButton4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="15min" />
-
-        <RadioButton
-            android:id="@+id/radioButton5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="30 min" />
-
-        <RadioButton
-            android:id="@+id/radioButton6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="1 hora" />
-
-        <RadioButton
-            android:id="@+id/radioButton7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="2 horas" />
-    </RadioGroup>
-    <EditText
-        android:id="@+id/editText3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:height="35dp"
-        android:hint="Nome da vaga"
-        android:inputType="number" />
-    <RadioGroup
-        android:layout_width="match_parent"  android:orientation="horizontal"
-        android:layout_height="35dp" >
-
-        <RadioButton
-            android:id="@+id/radioButton10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Guarani GS" />
-
-        <RadioButton
-            android:id="@+id/radioButton11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Dólar U$" />
-
-        <RadioButton
-            android:id="@+id/radioButton12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Real" />
-
-        <RadioButton
-            android:id="@+id/radioButton13"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Peso" />
-    </RadioGroup>
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
 
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:width="10dp"
-                android:text="Valor total:" />
-            <TextView
-                android:id="@+id/textView3"
+                android:gravity="center"
+                android:text="Condutor"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15dp" />
+
+        <EditText
+            android:id="@+id/edtMotorista"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:height="35dp"
+            android:ems="10"
+            android:hint="Nome motorista"
+            android:inputType="textPersonName" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Placa"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15dp" />
+        <EditText
+            android:id="@+id/edtPlaca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:height="35dp"
+            android:ems="10"
+            android:hint="Placa veiculo"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Vaga"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15dp" />
+
+        <EditText
+            android:id="@+id/edtVaga"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:height="35dp"
+            android:ems="10"
+            android:hint="Nome da vaga"
+            android:inputType="number" />
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+
+        </android.support.design.widget.AppBarLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Tipo"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15dp" />
+
+        <RadioGroup
+            android:id="@+id/tipoLocacao"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radiocarro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="R$ 150" />
-        </LinearLayout>
+                android:checked="true"
+                android:text="Carro" />
 
-        <Button
-                android:id="@+id/b_text"
-                android:layout_width="match_parent"
+            <RadioButton
+                android:id="@+id/radiomodo"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
+                android:layout_weight="1"
+                android:text="Moto" />
+        </RadioGroup>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Tempo"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15dp" />
+        <RadioGroup
+            android:id="@+id/radioTempo"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="15min" />
+
+            <RadioButton
+                android:id="@+id/radio30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="30 min" />
+
+            <RadioButton
+                android:id="@+id/radio1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="1 hora" />
+
+            <RadioButton
+                android:id="@+id/radio2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="2 horas" />
+        </RadioGroup>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Moeda"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15dp" />
+        <RadioGroup
+            android:id="@+id/radioMoeda"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radiogua"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="Guarani GS" />
+
+            <RadioButton
+                android:id="@+id/radiodo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Dólar U$" />
+
+            <RadioButton
+                android:id="@+id/radioReal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Real" />
+
+            <RadioButton
+                android:id="@+id/radioPeso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Peso" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+            android:id="@+id/b_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-                android:text="ALOCAR AGORA"
-                android:onClick="printText"/>
+                android:textColor="#ffffff"
+            android:background="@color/colorPrimary"
+                android:onClick="printText"
+            android:text="Imprimir demo" />
+
+            <Button
+                android:id="@+id/ssss"
+                android:layout_width="match_parent"
+                android:textColor="#ffffff"
+
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorPrimary"
+                android:onClick="coletarDados"
+                android:text="ALOCAR AGORA" />
 
 
 
-
+        </LinearLayout>
     </LinearLayout>
+
+
+
 </LinearLayout>
-    </LinearLayout>
