@@ -63,4 +63,9 @@ public class AdapterCursosPersonalizado extends BaseAdapter {
 
         return view;
     }
+
+    public void atualizar(List< Locacoes> aocacoes){
+        cursos.clear();
+        cursos.addAll(aocacoes);
+    }
 }

@@ -21,6 +21,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    ListView listaDeCursos;
+    private String codigoFiscal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,11 +39,13 @@ public class MainActivity extends AppCompatActivity {
             Type listType = new TypeToken<ArrayList<Locacoes>>(){}.getType();
 
            locacoes=gson.fromJson(b.getString("locacao"),listType);
+            codigoFiscal=b.getString("codigoFiscal");
+
         }
 
 
 
-        ListView listaDeCursos = (ListView) findViewById(R.id.lista);
+         listaDeCursos = (ListView) findViewById(R.id.lista);
 
 
         AdapterCursosPersonalizado adapter = new AdapterCursosPersonalizado(locacoes, this);
@@ -56,12 +61,39 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(intent);
-                finish();
-            }
+                intent.putExtra("codigoFiscal", codigoFiscal);
+                startActivityForResult(intent, 1);            }
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+      /*  AdapterCursosPersonalizado ta = (AdapterCursosPersonalizado) listaDeCursos.getAdapter();
 
+        Locacoes a=new Locacoes();
+        a.setPlaca("äaaaaaaaa");
+        ta.adiciionarIten(a);
+        ta.notifyDataSetChanged();*/
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK) {
+
+                Gson gson=new Gson();
+                Type listType = new TypeToken<ArrayList<Locacoes>>(){}.getType();
+
+
+
+                AdapterCursosPersonalizado ta = (AdapterCursosPersonalizado) listaDeCursos.getAdapter();
+               List <Locacoes> aaa=  gson.fromJson( data.getStringExtra("locacao"),listType);
+                ta.atualizar(aaa);
+                ta.notifyDataSetChanged();
+
+            }
+        }
+    }
 
 }

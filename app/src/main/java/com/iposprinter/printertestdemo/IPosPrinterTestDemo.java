@@ -22,8 +22,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import android.support.v7.widget.LinearLayoutCompat;
@@ -35,6 +38,7 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.iposprinter.iposprinterservice.*;
 
 import android.app.Activity;
@@ -62,6 +66,7 @@ import com.iposprinter.printertestdemo.Utils.ButtonDelayUtils;
 import com.iposprinter.printertestdemo.Utils.BytesUtil;
 import com.iposprinter.printertestdemo.Utils.DadosTicket;
 import com.iposprinter.printertestdemo.Utils.HandlerUtils;
+import com.iposprinter.printertestdemo.dto.Locacoes;
 import com.iposprinter.printertestdemo.dto.Login;
 import com.iposprinter.printertestdemo.dto.SalvarAlocacaoDTO;
 
@@ -136,6 +141,7 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
     EditText edtVaga;
     EditText edtMotorista;
     EditText edtPlaca;
+    private String codigoFiscal;
 
 
     @Override
@@ -152,7 +158,8 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                // Your code
+                Intent intent = new Intent();
+                setResult(RESULT_CANCELED, intent);
                 finish();
             }
         });
@@ -191,6 +198,12 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
         edtVaga = (EditText) findViewById(R.id.edtVaga);
         edtMotorista = (EditText) findViewById(R.id.edtMotorista);
         edtPlaca = (EditText) findViewById(R.id.edtPlaca);
+
+
+        Bundle b = getIntent().getExtras();
+        if(b != null){
+            codigoFiscal=b.getString("codigoFiscal");
+        }
 
     }
 
@@ -234,7 +247,7 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
         alocacaoDTO.setPlaca(edtPlaca.getText().toString());
         alocacaoDTO.setVaga(edtVaga.getText().toString());
         alocacaoDTO.setMotorista(edtMotorista.getText().toString());
-        alocacaoDTO.setFiscal_id("1");
+        alocacaoDTO.setFiscal_id(codigoFiscal);
         alocacaoDTO.setValorPago("2333");
 
         this.salvarLocacao(alocacaoDTO);
@@ -370,7 +383,6 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
     };
 
     public void sendPost() {
-        final Intent intent = new Intent(this, MainActivity.class);
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -392,11 +404,11 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
                     while ((text = br.readLine()) != null) {
                         json_response += text;
                     }
+                    String aaa = json_response;
 
-
+                    Intent intent = new Intent();
                     intent.putExtra("locacao", json_response);
-                    startActivity(intent);
-
+                    setResult(RESULT_OK, intent);
                     conn.disconnect();
                     finish();
 
@@ -409,13 +421,6 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
         thread.start();
     }
 
-    @Override
-    public void onBackPressed() {
-        // code here to show dialog
-        super.onBackPressed();  // optional depending on your needs
-        this.sendPost();
-
-    }
 
     private ServiceConnection connectService = new ServiceConnection() {
         @Override
