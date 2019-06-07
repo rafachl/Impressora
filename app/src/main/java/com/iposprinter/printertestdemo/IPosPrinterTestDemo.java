@@ -493,7 +493,7 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    URL url = new URL("https://app.actsistemas.com.br/alocacao/1");
+                    URL url = new URL("https://app.actsistemas.com.br/alocacao/"+codigoFiscal);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Content-Type", "application/json");
