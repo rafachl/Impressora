@@ -768,7 +768,7 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
 
                     String fatura = respost.getId();
                     String faturaData = respost.getData();
-                    String faturaDataValidade = respost.getDataHoraExpiracao();
+                    String faturaDataValidade = respost.getFaturaValidade();
                     String faturaCliente = respost.getMotorista();
                     String faturaClienteRuc = respost.getMotoristaRuc();
                     String faturaChapa = respost.getPlaca();
@@ -793,9 +793,9 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
                     mIPosPrinterService.printSpecifiedTypeText("Val. " + faturaData + " hasta " + faturaDataValidade, "ST", 24, callback);
                     mIPosPrinterService.printSpecifiedTypeText("********************************", "ST", 24, callback);
                     mIPosPrinterService.printBlankLines(1, 16, callback);
-                    mIPosPrinterService.PrintSpecFormatText("FACTURA  001-002-" + fatura, "ST", 32, 1, callback);
+                    mIPosPrinterService.PrintSpecFormatText("FACTURA 001-002-" + fatura, "ST", 32, 1, callback);
                     mIPosPrinterService.printBlankLines(1, 16, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("C.N.: " + fatura + "         " + faturaData, "ST", 24, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("C.N.: " + fatura + "        " + faturaData, "ST", 24, callback);
                     mIPosPrinterService.printSpecifiedTypeText("--------------------------------", "ST", 24, callback);
                     mIPosPrinterService.printSpecifiedTypeText("Cliente: ", "ST", 24, callback);
                     mIPosPrinterService.printSpecifiedTypeText(faturaCliente, "ST", 24, callback);

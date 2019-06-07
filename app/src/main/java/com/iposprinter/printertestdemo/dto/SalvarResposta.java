@@ -12,6 +12,15 @@ public class SalvarResposta {
     private String data;
     private String motorista;
     private String motoristaRuc;
+    private String faturaValidade;
+
+    public String getFaturaValidade() {
+        return faturaValidade;
+    }
+
+    public void setFaturaValidade(String faturaValidade) {
+        this.faturaValidade = faturaValidade;
+    }
 
     public String getData() {
         return data;
