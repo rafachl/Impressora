@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -66,6 +67,7 @@ import com.iposprinter.printertestdemo.Utils.ButtonDelayUtils;
 import com.iposprinter.printertestdemo.Utils.BytesUtil;
 import com.iposprinter.printertestdemo.Utils.DadosTicket;
 import com.iposprinter.printertestdemo.Utils.HandlerUtils;
+import com.iposprinter.printertestdemo.dto.Cotacao;
 import com.iposprinter.printertestdemo.dto.Locacoes;
 import com.iposprinter.printertestdemo.dto.Login;
 import com.iposprinter.printertestdemo.dto.SalvarAlocacaoDTO;
@@ -137,13 +139,15 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
     private GoogleApiClient client;
     RadioGroup radioTipo;
     RadioGroup radioTempo;
-    RadioGroup radioMoeda;
     EditText edtVaga;
     EditText edtMotorista;
     EditText edtPlaca;
     private String codigoFiscal;
 
 
+    TextView valorGuarani,valorDoalr,valorReal,valorPeso;
+
+Cotacao cotacao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -193,7 +197,6 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
 
 
         radioTipo = (RadioGroup) findViewById(R.id.tipoLocacao);
-        radioMoeda = (RadioGroup) findViewById(R.id.radioMoeda);
         radioTempo = (RadioGroup) findViewById(R.id.radioTempo);
         edtVaga = (EditText) findViewById(R.id.edtVaga);
         edtMotorista = (EditText) findViewById(R.id.edtMotorista);
@@ -203,58 +206,86 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         if(b != null){
             codigoFiscal=b.getString("codigoFiscal");
+            Gson gson=new Gson();
+
+            cotacao=gson.fromJson(b.getString("cotacao"),Cotacao.class);
         }
+
+        valorDoalr=(TextView) findViewById(R.id.valorDolar);
+        valorGuarani=(TextView) findViewById(R.id.valorGuarani);
+        valorPeso=(TextView) findViewById(R.id.valorPeso);
+        valorReal=(TextView) findViewById(R.id.valorReal);
 
     }
 
     public void coletarDados(View v) {
         int itenRadioTipo = radioTipo.getCheckedRadioButtonId();
-        int itenRadioMoeda = radioMoeda.getCheckedRadioButtonId();
         int itenRadioTempo = radioTempo.getCheckedRadioButtonId();
 
-        String tipo = "moto";
-        String tempo = "";
-        if (itenRadioTipo == findViewById(R.id.radiocarro).getId()) {
-            tipo = "carro";
-        }
+        float tempo=0 ;
+
 
         if (itenRadioTempo == findViewById(R.id.radio15).getId()) {
-            tempo = "15";
+            tempo = 15;
 
         } else if (itenRadioTempo == findViewById(R.id.radio30).getId()) {
-            tempo = "30";
+            tempo = 30;
         } else if (itenRadioTempo == findViewById(R.id.radio1).getId()) {
-            tempo = "60";
+            tempo =60;
         } else if (itenRadioTempo == findViewById(R.id.radio2).getId()) {
-            tempo = "120";
+            tempo = 120;
         }
-        String moeda = "";
-        if (itenRadioMoeda == findViewById(R.id.radiogua).getId()) {
-            moeda = "GS";
-        } else if (itenRadioMoeda == findViewById(R.id.radiodo).getId()) {
-            moeda = "U$";
-        } else if (itenRadioMoeda == findViewById(R.id.radioReal).getId()) {
-            moeda = "BRL";
-        } else if (itenRadioMoeda == findViewById(R.id.radioPeso).getId()) {
-            moeda = "Peso";
+   float valorTipo=0;
+
+        String tipo = "moto";
+        if (itenRadioTipo == findViewById(R.id.radiocarro).getId()) {
+            tipo = "carro";
+            valorTipo=cotacao.getValorHoraCarro();
+        }else {
+            valorTipo=cotacao.getValorHoraMoto();
+
         }
+
+
+   float hora=tempo/60;
+
+
+        float dolar=(valorTipo*hora)/cotacao.getCotacaoDolar();
+        float real=(valorTipo*hora)/cotacao.getCotacaoReal();
+        float peso=(valorTipo*hora)/cotacao.getCotacaoPeso();
+        float guarani=(valorTipo*hora)/cotacao.getCotacaoGuarani();
+
+
+
+        valorDoalr.setText("U$ "+round(dolar,2));
+        valorReal.setText("R$: "+round(real,2));
+        valorGuarani.setText("GS: "+round(guarani ,2));
+        valorPeso.setText("Peso: "+round(peso,2));
 
 
         SalvarAlocacaoDTO alocacaoDTO = new SalvarAlocacaoDTO();
         alocacaoDTO.setTipo(tipo);
-        alocacaoDTO.setTempo(tempo);
-        alocacaoDTO.setMoeda(moeda);
+        alocacaoDTO.setTempo(tempo+"");
+        alocacaoDTO.setMoeda("GS");
         alocacaoDTO.setPlaca(edtPlaca.getText().toString());
         alocacaoDTO.setVaga(edtVaga.getText().toString());
         alocacaoDTO.setMotorista(edtMotorista.getText().toString());
         alocacaoDTO.setFiscal_id(codigoFiscal);
-        alocacaoDTO.setValorPago("2333");
+        alocacaoDTO.setValorPago(guarani+"");
+
+        setContentView(R.layout.progres);
+
 
         this.salvarLocacao(alocacaoDTO);
 
     }
-
+    public static BigDecimal round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd;
+    }
     public void salvarLocacao(final SalvarAlocacaoDTO salvarAlocacaoDTO) {
+        final Context context=this;
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -286,7 +317,16 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
 
                     sendPost();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            setContentView(R.layout.activity_ipos_printer_test_demo);
+                            Toast.makeText(context,"Erro ao salvar locacoes",Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
                 }
             }
         });
@@ -383,6 +423,7 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
     };
 
     public void sendPost() {
+        final Context context=this;
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -413,7 +454,16 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
                     finish();
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            setContentView(R.layout.activity_ipos_printer_test_demo);
+                            Toast.makeText(context,"Erro ao buscar locacoes",Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
                 }
             }
         });

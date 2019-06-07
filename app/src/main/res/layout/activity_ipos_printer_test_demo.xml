@@ -29,13 +29,7 @@
         android:orientation="vertical">
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Condutor"
-                android:textColor="@color/colorPrimary"
-                android:textSize="15dp" />
+
 
         <EditText
             android:id="@+id/edtMotorista"
@@ -45,13 +39,7 @@
             android:ems="10"
             android:hint="Nome motorista"
             android:inputType="textPersonName" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Placa"
-            android:textColor="@color/colorPrimary"
-            android:textSize="15dp" />
+
         <EditText
             android:id="@+id/edtPlaca"
             android:layout_width="match_parent"
@@ -61,13 +49,7 @@
             android:hint="Placa veiculo"
             android:inputType="textPersonName" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Vaga"
-            android:textColor="@color/colorPrimary"
-            android:textSize="15dp" />
+
 
         <EditText
             android:id="@+id/edtVaga"
@@ -159,49 +141,35 @@
                 android:text="2 horas" />
         </RadioGroup>
 
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Moeda"
+            android:text="Cotización cambiaria del día"
             android:textColor="@color/colorPrimary"
             android:textSize="15dp" />
-        <RadioGroup
-            android:id="@+id/radioMoeda"
+        <TextView
+            android:id="@+id/valorGuarani"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:text="GS: 0,00" />
 
-            <RadioButton
-                android:id="@+id/radiogua"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="Guarani GS" />
+        <TextView
+            android:id="@+id/valorDolar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="U$: 0,00" />
+        <TextView
+            android:id="@+id/valorReal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="R$ 0,00" />
 
-            <RadioButton
-                android:id="@+id/radiodo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Dólar U$" />
-
-            <RadioButton
-                android:id="@+id/radioReal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Real" />
-
-            <RadioButton
-                android:id="@+id/radioPeso"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Peso" />
-        </RadioGroup>
+        <TextView
+            android:id="@+id/valorPeso"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Peso: 0,00" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -215,19 +183,9 @@
             android:layout_marginTop="10dp"
                 android:textColor="#ffffff"
             android:background="@color/colorPrimary"
-                android:onClick="printText"
-            android:text="Imprimir demo" />
-
-            <Button
-                android:id="@+id/ssss"
-                android:layout_width="match_parent"
-                android:textColor="#ffffff"
-
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/colorPrimary"
                 android:onClick="coletarDados"
-                android:text="ALOCAR AGORA" />
+            android:text="Alocar Agora" />
+
 
 
 

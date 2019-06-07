@@ -24,7 +24,7 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="148dp"
-            android:src="@drawable/car" />
+            android:src="@drawable/logo" />
 
         <EditText
             android:id="@+id/edtLogin"
@@ -46,7 +46,8 @@
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button"
+            android:text="Realizar Login"
+            android:textColor="#ffffff"
             android:background="@color/colorPrimary"
             android:onClick="logar"/>
     </LinearLayout>

@@ -2,7 +2,7 @@ package com.iposprinter.printertestdemo.dto;
 
 public class SalvarAlocacaoDTO {
 
-    private String tempo;
+    private String  tempo;
     private String tipo;
     private String moeda;
     private String vaga;

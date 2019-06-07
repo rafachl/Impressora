@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.iposprinter.printertestdemo.dto.AdapterCursosPersonalizado;
+import com.iposprinter.printertestdemo.dto.Cotacao;
 import com.iposprinter.printertestdemo.dto.Locacoes;
 
 import java.lang.reflect.Type;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     ListView listaDeCursos;
     private String codigoFiscal;
+    private String cotacao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
            locacoes=gson.fromJson(b.getString("locacao"),listType);
             codigoFiscal=b.getString("codigoFiscal");
 
+
+            cotacao=b.getString("cotacao");
         }
 
 
@@ -61,7 +65,9 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                intent.putExtra("cotacao", cotacao);
                 intent.putExtra("codigoFiscal", codigoFiscal);
+
                 startActivityForResult(intent, 1);            }
         });
     }
