@@ -71,6 +71,7 @@ import com.iposprinter.printertestdemo.dto.Cotacao;
 import com.iposprinter.printertestdemo.dto.Locacoes;
 import com.iposprinter.printertestdemo.dto.Login;
 import com.iposprinter.printertestdemo.dto.SalvarAlocacaoDTO;
+import com.iposprinter.printertestdemo.dto.SalvarResposta;
 
 import static com.iposprinter.printertestdemo.Utils.PrintContentsExamples.customCHR;
 import static com.iposprinter.printertestdemo.Utils.PrintContentsExamples.customCHZ1;
@@ -142,12 +143,14 @@ public class IPosPrinterTestDemo extends AppCompatActivity {
     EditText edtVaga;
     EditText edtMotorista;
     EditText edtPlaca;
+    EditText edtNumeroDccumento;
     private String codigoFiscal;
 
 
-    TextView valorGuarani,valorDoalr,valorReal,valorPeso;
+    TextView valorGuarani, valorDoalr, valorReal, valorPeso;
 
-Cotacao cotacao;
+    Cotacao cotacao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -201,28 +204,29 @@ Cotacao cotacao;
         edtVaga = (EditText) findViewById(R.id.edtVaga);
         edtMotorista = (EditText) findViewById(R.id.edtMotorista);
         edtPlaca = (EditText) findViewById(R.id.edtPlaca);
-
+        edtNumeroDccumento = (EditText) findViewById(R.id.numeroDocumento);
 
         Bundle b = getIntent().getExtras();
-        if(b != null){
-            codigoFiscal=b.getString("codigoFiscal");
-            Gson gson=new Gson();
+        if (b != null) {
+            codigoFiscal = b.getString("codigoFiscal");
+            Gson gson = new Gson();
 
-            cotacao=gson.fromJson(b.getString("cotacao"),Cotacao.class);
+            cotacao = gson.fromJson(b.getString("cotacao"), Cotacao.class);
         }
 
-        valorDoalr=(TextView) findViewById(R.id.valorDolar);
-        valorGuarani=(TextView) findViewById(R.id.valorGuarani);
-        valorPeso=(TextView) findViewById(R.id.valorPeso);
-        valorReal=(TextView) findViewById(R.id.valorReal);
+        valorDoalr = (TextView) findViewById(R.id.valorDolar);
+        valorGuarani = (TextView) findViewById(R.id.valorGuarani);
+        valorPeso = (TextView) findViewById(R.id.valorPeso);
+        valorReal = (TextView) findViewById(R.id.valorReal);
 
     }
 
-    public void coletarDados(View v) {
+    public void exibirValores(View v) {
+
         int itenRadioTipo = radioTipo.getCheckedRadioButtonId();
         int itenRadioTempo = radioTempo.getCheckedRadioButtonId();
 
-        float tempo=0 ;
+        float tempo = 0;
 
 
         if (itenRadioTempo == findViewById(R.id.radio15).getId()) {
@@ -231,61 +235,109 @@ Cotacao cotacao;
         } else if (itenRadioTempo == findViewById(R.id.radio30).getId()) {
             tempo = 30;
         } else if (itenRadioTempo == findViewById(R.id.radio1).getId()) {
-            tempo =60;
+            tempo = 60;
         } else if (itenRadioTempo == findViewById(R.id.radio2).getId()) {
             tempo = 120;
         }
-   float valorTipo=0;
+        float valorTipo = 0;
 
         String tipo = "moto";
         if (itenRadioTipo == findViewById(R.id.radiocarro).getId()) {
             tipo = "carro";
-            valorTipo=cotacao.getValorHoraCarro();
-        }else {
-            valorTipo=cotacao.getValorHoraMoto();
+            valorTipo = cotacao.getValorHoraCarro();
+        } else {
+            valorTipo = cotacao.getValorHoraMoto();
 
         }
 
 
-   float hora=tempo/60;
+        float hora = tempo / 60;
 
 
-        float dolar=(valorTipo*hora)/cotacao.getCotacaoDolar();
-        float real=(valorTipo*hora)/cotacao.getCotacaoReal();
-        float peso=(valorTipo*hora)/cotacao.getCotacaoPeso();
-        float guarani=(valorTipo*hora)/cotacao.getCotacaoGuarani();
+        float dolar = (valorTipo * hora) / cotacao.getCotacaoDolar();
+        float real = (valorTipo * hora) / cotacao.getCotacaoReal();
+        float peso = (valorTipo * hora) / cotacao.getCotacaoPeso();
+        float guarani = (valorTipo * hora) / cotacao.getCotacaoGuarani();
 
 
+        valorDoalr.setText("U$ " + round(dolar, 2));
+        valorReal.setText("R$: " + round(real, 2));
+        valorGuarani.setText("GS: " + round(guarani, 2));
+        valorPeso.setText("Peso: " + round(peso, 2));
 
-        valorDoalr.setText("U$ "+round(dolar,2));
-        valorReal.setText("R$: "+round(real,2));
-        valorGuarani.setText("GS: "+round(guarani ,2));
-        valorPeso.setText("Peso: "+round(peso,2));
 
+    }
+
+    public void coletarDados(View v) {
+
+
+        int itenRadioTipo = radioTipo.getCheckedRadioButtonId();
+        int itenRadioTempo = radioTempo.getCheckedRadioButtonId();
+
+        float tempo = 0;
+
+
+        if (itenRadioTempo == findViewById(R.id.radio15).getId()) {
+            tempo = 15;
+
+        } else if (itenRadioTempo == findViewById(R.id.radio30).getId()) {
+            tempo = 30;
+        } else if (itenRadioTempo == findViewById(R.id.radio1).getId()) {
+            tempo = 60;
+        } else if (itenRadioTempo == findViewById(R.id.radio2).getId()) {
+            tempo = 120;
+        }
+        float valorTipo = 0;
+
+        String tipo = "moto";
+        if (itenRadioTipo == findViewById(R.id.radiocarro).getId()) {
+            tipo = "carro";
+            valorTipo = cotacao.getValorHoraCarro();
+        } else {
+            valorTipo = cotacao.getValorHoraMoto();
+
+        }
+
+
+        float hora = tempo / 60;
+
+
+        float dolar = (valorTipo * hora) / cotacao.getCotacaoDolar();
+        float real = (valorTipo * hora) / cotacao.getCotacaoReal();
+        float peso = (valorTipo * hora) / cotacao.getCotacaoPeso();
+        float guarani = (valorTipo * hora) / cotacao.getCotacaoGuarani();
+
+
+        valorDoalr.setText("U$ " + round(dolar, 2));
+        valorReal.setText("R$: " + round(real, 2));
+        valorGuarani.setText("GS: " + round(guarani, 2));
+        valorPeso.setText("Peso: " + round(peso, 2));
 
         SalvarAlocacaoDTO alocacaoDTO = new SalvarAlocacaoDTO();
         alocacaoDTO.setTipo(tipo);
-        alocacaoDTO.setTempo(tempo+"");
+        alocacaoDTO.setTempo(tempo + "");
         alocacaoDTO.setMoeda("GS");
         alocacaoDTO.setPlaca(edtPlaca.getText().toString());
         alocacaoDTO.setVaga(edtVaga.getText().toString());
         alocacaoDTO.setMotorista(edtMotorista.getText().toString());
         alocacaoDTO.setFiscal_id(codigoFiscal);
-        alocacaoDTO.setValorPago(guarani+"");
-
+        alocacaoDTO.setValorPago(guarani + "");
+        alocacaoDTO.setMotoristaRuc(edtNumeroDccumento.getText().toString());
         setContentView(R.layout.progres);
 
 
         this.salvarLocacao(alocacaoDTO);
 
     }
+
     public static BigDecimal round(float d, int decimalPlace) {
         BigDecimal bd = new BigDecimal(Float.toString(d));
         bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
         return bd;
     }
+
     public void salvarLocacao(final SalvarAlocacaoDTO salvarAlocacaoDTO) {
-        final Context context=this;
+        final Context context = this;
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -312,9 +364,21 @@ Cotacao cotacao;
 
                     Log.e("STATUS", String.valueOf(conn.getResponseCode()));
                     Log.e("MSG", conn.getResponseMessage());
+
+                    String json_response = "";
+                    InputStreamReader in = new InputStreamReader(conn.getInputStream());
+                    BufferedReader br = new BufferedReader(in);
+                    String text = "";
+                    while ((text = br.readLine()) != null) {
+                        json_response += text;
+                    }
+                    SalvarResposta respost = gson.fromJson(json_response, SalvarResposta.class);
+
+
                     conn.disconnect();
 
 
+                    printText(respost);
                     sendPost();
                 } catch (Exception e) {
                     runOnUiThread(new Runnable() {
@@ -323,7 +387,7 @@ Cotacao cotacao;
                         public void run() {
 
                             setContentView(R.layout.activity_ipos_printer_test_demo);
-                            Toast.makeText(context,"Erro ao salvar locacoes",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Erro ao salvar locacoes", Toast.LENGTH_SHORT).show();
 
                         }
                     });
@@ -423,7 +487,7 @@ Cotacao cotacao;
     };
 
     public void sendPost() {
-        final Context context=this;
+        final Context context = this;
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -460,7 +524,7 @@ Cotacao cotacao;
                         public void run() {
 
                             setContentView(R.layout.activity_ipos_printer_test_demo);
-                            Toast.makeText(context,"Erro ao buscar locacoes",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Erro ao buscar locacoes", Toast.LENGTH_SHORT).show();
 
                         }
                     });
@@ -691,7 +755,7 @@ Cotacao cotacao;
     }
 
 
-    public void printText(View v) {
+    public void printText(final SalvarResposta respost) {
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -701,27 +765,70 @@ Cotacao cotacao;
 
                 try {
 
-                    DadosTicket dadosTicket = new DadosTicket();
-                    dadosTicket.setDataHora("03/06/2019 22:00");
-                    dadosTicket.setMotorista("Gabriel");
-                    dadosTicket.setNomeFiscal("Fiscal 20");
-                    dadosTicket.setPlacaVeiculo("APD-000");
-                    dadosTicket.setValor("GS 2000,00");
-                    dadosTicket.setSaida("03/06/2019 22:30");
 
-                    mIPosPrinterService.printBitmap(1, 8, mBitmap, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("COMPROVANTE \n", "ST", 48, callback);
+                    String fatura = respost.getId();
+                    String faturaData = respost.getData();
+                    String faturaDataValidade = respost.getDataHoraExpiracao();
+                    String faturaCliente = respost.getMotorista();
+                    String faturaClienteRuc = respost.getMotoristaRuc();
+                    String faturaChapa = respost.getPlaca();
+                    String faturaFiscal = respost.getFiscal_id();
+                    String faturaEntrada = respost.getDataHora();
+                    String faturaSaida = respost.getDataHoraExpiracao();
+                    String faturaEspacio = respost.getVaga();
+                    String faturaValor = respost.getValorPago();
+
+                    String faturaUrl = respost.getUrlValidacao();
+
+                    mIPosPrinterService.printBitmap(1, 16, mBitmap, callback);
+                    mIPosPrinterService.printBlankLines(1, 16, callback);
+                    mIPosPrinterService.PrintSpecFormatText("COMPROBANTE \n", "ST", 48, 1, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("    ESTACIONAMIENTO DIGITAL", "ST", 24, callback);
                     mIPosPrinterService.printSpecifiedTypeText("********************************", "ST", 24, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("MOTORISTA: " + dadosTicket.getMotorista(), "ST", 32, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("PLACA: " + dadosTicket.getPlacaVeiculo(), "ST", 32, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("ENTRADA: " + dadosTicket.getDataHora(), "ST", 20, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("SAÍDA: " + dadosTicket.getSaida(), "ST", 20, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("FISCAL:" + dadosTicket.getNomeFiscal(), "ST", 32, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("TOTAL: " + dadosTicket.getValor(), "ST", 32, callback);
-                    mIPosPrinterService.printSpecifiedTypeText("MOEDA: GUARANI", "ST", 32, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("A-TEC PARAGUAY    RUC 80012312-3", "ST", 24, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("********************************", "ST", 24, callback);
+                    mIPosPrinterService.printBlankLines(1, 10, callback);
+                    mIPosPrinterService.PrintSpecFormatText("TIMBRADO N.: " + fatura, "ST", 24, 1, callback);
+                    mIPosPrinterService.printBlankLines(1, 10, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("Val. " + faturaData + " hasta " + faturaDataValidade, "ST", 24, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("********************************", "ST", 24, callback);
+                    mIPosPrinterService.printBlankLines(1, 16, callback);
+                    mIPosPrinterService.PrintSpecFormatText("FACTURA  001-002-" + fatura, "ST", 32, 1, callback);
+                    mIPosPrinterService.printBlankLines(1, 16, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("C.N.: " + fatura + "         " + faturaData, "ST", 24, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("--------------------------------", "ST", 24, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("Cliente: ", "ST", 24, callback);
+                    mIPosPrinterService.printSpecifiedTypeText(faturaCliente, "ST", 24, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("Ci/Ruc: " + faturaClienteRuc, "ST", 24, callback);
+                    mIPosPrinterService.printBlankLines(1, 20, callback);
+                    String[] text = new String[2];
+                    int[] width = new int[]{10, 19};
+                    int[] align = new int[]{0, 2};
+                    text[0] = "Chapa";
+                    text[1] = faturaChapa;
+                    mIPosPrinterService.printColumnsText(text, width, align, 1, callback);
+                    text[0] = "Fiscal";
+                    text[1] = faturaFiscal;
+                    mIPosPrinterService.printColumnsText(text, width, align, 1, callback);
+                    text[0] = "Entrada";
+                    text[1] = faturaEntrada;
+                    mIPosPrinterService.printColumnsText(text, width, align, 1, callback);
+                    text[0] = "Salida";
+                    text[1] = faturaSaida;
+                    mIPosPrinterService.printColumnsText(text, width, align, 1, callback);
+                    text[0] = "Espacio";
+                    text[1] = faturaEspacio;
+                    mIPosPrinterService.printColumnsText(text, width, align, 1, callback);
+                    text[0] = "Valor(Gs)";
+                    text[1] = faturaValor;
+                    mIPosPrinterService.printColumnsText(text, width, align, 0, callback);
+                    mIPosPrinterService.printBlankLines(1, 16, callback);
+                    mIPosPrinterService.printSpecifiedTypeText("********************************", "ST", 24, callback);
+                    mIPosPrinterService.printBlankLines(1, 25, callback);
+                    mIPosPrinterService.setPrinterPrintAlignment(1, callback);
+                    mIPosPrinterService.printQRCode(faturaUrl, 11, 2, callback);
 
-                    mIPosPrinterService.printBitmap(1, 8, qrcode, callback);
-
+                    mIPosPrinterService.printBlankLines(1, 25, callback);
 
                     bitmapRecycle(mBitmap);
                     mIPosPrinterService.printerPerformPrint(80, callback);

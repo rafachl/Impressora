@@ -10,6 +10,15 @@ public class SalvarAlocacaoDTO {
     private String fiscal_id;
     private String placa;
  private String motorista;
+ private String motoristaRuc;
+
+    public String getMotoristaRuc() {
+        return motoristaRuc;
+    }
+
+    public void setMotoristaRuc(String motoristaRuc) {
+        this.motoristaRuc = motoristaRuc;
+    }
 
     public String getMotorista() {
         return motorista;

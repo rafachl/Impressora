@@ -40,6 +40,16 @@
             android:hint="Nome motorista"
             android:inputType="textPersonName" />
 
+
+        <EditText
+            android:id="@+id/numeroDocumento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:height="35dp"
+            android:ems="10"
+            android:hint="Ruc"
+            android:inputType="textPersonName" />
+
         <EditText
             android:id="@+id/edtPlaca"
             android:layout_width="match_parent"
@@ -87,6 +97,7 @@
                 android:id="@+id/radiocarro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="exibirValores"
                 android:layout_weight="1"
                 android:checked="true"
                 android:text="Carro" />
@@ -96,6 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="exibirValores"
                 android:text="Moto" />
         </RadioGroup>
         <TextView
@@ -117,6 +129,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:checked="true"
+                android:onClick="exibirValores"
                 android:text="15min" />
 
             <RadioButton
@@ -124,6 +137,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="exibirValores"
                 android:text="30 min" />
 
             <RadioButton
@@ -131,6 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="exibirValores"
                 android:text="1 hora" />
 
             <RadioButton
@@ -138,6 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="exibirValores"
                 android:text="2 horas" />
         </RadioGroup>
 
